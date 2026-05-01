@@ -44,19 +44,6 @@ class PedidoDB(Base):
     total = Column(Integer)
     estado = Column(String, default="pendiente") # pendiente, entregado
 
-class ClienteDB(Base):
-    __tablename__ = "clientes"
-    id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String, nullable=False)
-    telefono = Column(String)
-
-class PedidoDB(Base):
-    __tablename__ = "pedidos"
-    id = Column(Integer, primary_key=True, index=True)
-    cliente_id = Column(Integer, ForeignKey("clientes.id")) # Conecta con la tabla clientes
-    producto_id = Column(Integer, ForeignKey("productos.id")) # Conecta con productos
-    cantidad = Column(Integer)
-    total = Column(Integer)
 
 # Crear todas las tablas nuevas
 Base.metadata.create_all(bind=engine)
