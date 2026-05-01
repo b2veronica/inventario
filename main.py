@@ -70,6 +70,7 @@ app.add_middleware(
 
 # 5. POBLAR DATOS INICIALES
 def init_db():
+    Base.metadata.create_all(bind=engine) # Esto crea las tablas si no existen
     db = SessionLocal()
     try:
         # Crear usuarios si no existen
@@ -86,10 +87,19 @@ def init_db():
         if db.query(ProductoDB).count() == 0:
             prods = [
                 ProductoDB(nombre="Laptop Dell", precio=12000, stock=10, imagen_url="https://m.media-amazon.com/images/I/61vG6H9G-RL._AC_SL1500_.jpg"),
-                ProductoDB(nombre="Mouse Gamer", precio=450, stock=20, imagen_url="https://resource.logitechg.com/w_692,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/g502-lightspeed/g502-lightspeed-gallery-1.png")
+                ProductoDB(nombre="Mouse Gamer", precio=450, stock=20, imagen_url="https://resource.logitechg.com/w_692,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/g502-lightspeed/g502-lightspeed-gallery-1.png"),
+                ProductoDB(nombre="Silla Gamer", precio=6500, stock=10, imagen_url="https://www.amazon.com.mx/s?k=silla+gamer&adgrpid=1169880793798142&hvadid=73117793944728&hvbmt=be&hvdev=c&hvlocphy=151332&hvnetw=o&hvqmt=e&hvtargid=kwd-73117901294316%3Aloc-119&hydadcr=26974_11687084&mcid=1d35df4e09d3317f9ef35ca70bf5c700&msclkid=f694cb597592157d723da2ac62053fd7&tag=msndeskstdmx-20&ref=pd_sl_6dklsv9tje_e"),
+                ProductoDB(nombre="Juego de Destornilladores", precio=350, stock=25, imagen_url="https://m.media-amazon.com/images/I/81z9R-hU6LL._AC_SL1500_.jpg"),
+                ProductoDB(nombre="Lámpara LED Taller", precio=450, stock=15, imagen_url="https://m.media-amazon.com/images/I/61m6XpYv7AL._AC_SL1500_.jpg"),
+                ProductoDB(nombre="Multímetro Digital", precio=680, stock=8, imagen_url="https://m.media-amazon.com/images/I/61S6h9uXG1L._AC_SL1500_.jpg"),
+                ProductoDB(nombre="Cable HDMI", precio=120, stock=50, imagen_url="https://m.media-amazon.com/images/I/71I3u7U6SML._AC_SL1500_.jpg")
             ]
             db.add_all(prods)
         db.commit()
+        print("productos insertados")
+    except Exception as e:
+        print(f"Hubo un error: {e}")
+    
     finally:
         db.close()
 
