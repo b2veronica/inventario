@@ -220,7 +220,18 @@ def obtener_todos_los_pedidos():
     try:
         # Trae todos los pedidos de la base de datos sin filtrar
         pedidos = db.query(PedidoDB).all()
-        return pedidos
+        
+        resultados = []
+        for pedido in pedidos:
+            resultados.append({
+                "id": pedido.id,
+                "cantidad": pedido.cantidad,
+                "total": pedido.total,
+                "estado": pedido.estado,
+                "producto_id": pedido.producto_id,
+                "nombre_cliente": db.query(ClienteDB).filter(ClienteDB.id == pedido.cliente_id).first().nombre
+            })
+        return resultados
     finally:
         db.close()
 
