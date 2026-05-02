@@ -169,6 +169,16 @@ def listar_pedidos():
     db.close()
     return pedidos
 
+@app.get("/pedidos")
+def obtener_todos_los_pedidos():
+    db = SessionLocal()
+    try:
+        # Trae todos los pedidos de la base de datos sin filtrar
+        pedidos = db.query(PedidoDB).all()
+        return pedidos
+    finally:
+        db.close()
+
 @app.get("/")
 def home():
     return {"mensaje": "Servidor Local Activo con ngrok"}
