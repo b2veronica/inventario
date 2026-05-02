@@ -124,6 +124,51 @@ def listar_productos():
     db.close()
     return prods
 
+@app.put("/completar-pedido/{pedido_id}")
+def completar_pedido(pedido_id: int):
+    db = SessionLocal()
+    try:
+        pedido = db.query(PedidoDB).filter(PedidoDB.id == pedido_id).first()
+        if not pedido:
+            raise HTTPException(status_code=404, detail="Pedido no encontrado")
+        pedido.estado = "entregado"
+        db.commit()
+        return {"status": "success"}
+    finally:
+        db.close()
+
+@app.put("/actualizar-stock/{producto_id}")
+def actualizar_stock(producto_id: int, data: dict):
+    db = SessionLocal()
+    try:
+        nuevo_valor = data.get("stock")
+        if nuevo_valor is None or nuevo_valor < 0:
+            raise HTTPException(status_code=400, detail="Valor de stock no puede ser negativo")
+        producto = db.query(ProductoDB).filter(ProductoDB.id == producto_id).first()
+        if not producto:
+            raise HTTPException(status_code=404, detail="Producto no encontrado")
+        producto.stock = data.get("stock")
+        db.commit()
+        return {"status": "success"}
+    finally:
+        db.close()
+
+@app.post("/crear-producto")
+def crear_producto(data: dict):
+    db = SessionLocal()
+    try:
+        nuevo_prod = ProductoDB(
+            nombre=data.get("nombre"),
+            precio=data.get("precio"),
+            stock=data.get("stock"),
+            imagen_url=data.get("imagen_url")
+        )
+        db.add(nuevo_prod)
+        db.commit()
+        return {"status": "success"}
+    finally:
+        db.close()
+
 @app.post("/crear-pedido")
 def crear_pedido(data: PedidoSchema):
     db = SessionLocal()
